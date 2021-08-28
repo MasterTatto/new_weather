@@ -1,40 +1,56 @@
-import logo from './logo.svg';
 import './App.css';
-import axios from "axios";
-import React, {useState} from "react";
 
-const API_KEY = '460af259479a2574e456a34ffff0205c'
+import React, {useEffect, useState} from "react";
+import axios from "axios";
+import {logDOM} from "@testing-library/react";
+import Loader from "./loader";
 
 
 function App() {
-    const [value, setValue] = useState('')
-    let state = {
-        temp: undefined,
-        name: undefined,
-        country: undefined,
-        error: undefined
-    }
-    const gettingWeather = async () => {
-        let api_url = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${value}&appid=${API_KEY}&units=metric`)
-        let data = await api_url.json()
-        //console.log(data)
-        state = {
-            name: {...data.name}
-        }
-        //console.log(state)
-    }
-    console.log(state)
-    // console.log(gettingWeather())
+    let [value, setValue] = useState('')
+    const [data, setData] = useState(null)
+    const [city, setCity] = useState('')
+    useEffect(() => {
+        axios.get('https://api.openweathermap.org/data/2.5/weather?q=Minsk&appid=460af259479a2574e456a34ffff0205c&units=metric')
+            .then(response => setData(response.data))
+    }, [])
+
+    useEffect(() => {
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=460af259479a2574e456a34ffff0205c&units=metric`)
+            .then(response => {
+                    console.log(response)
+                    if (response.status === 200) {
+                        setData(response.data)
+                    } else {
+                        setData(null)
+                    }
+                }
+            )
+
+    }, [city])
+    //
+    console.log(data)
+    console.log(city)
+    const info = <div>
+        <div>now weather : {!data ? 'wait' : data.main.temp}</div>
+        City: <span>{!data ? 'wait' : data.name}</span>
+    </div>
     return (
-        <div className="App">
-            <input type="text" value={value} onChange={(e) => setValue(e.currentTarget.value)}/>
-            <button onClick={() => gettingWeather()}>search</button>
+        data ? (
             <div>
-                <p>{gettingWeather.main ? gettingWeather.main.temp : 'null'}</p>
-                <p>{gettingWeather.name ? gettingWeather.name : 'null'}</p>
+                <div>
+                    <input type="text" value={value} onChange={(e) => setValue(e.currentTarget.value)}/>
+                    <button onClick={() => setCity(value)}>Search</button>
+                </div>
+                {info}
+
+
             </div>
-        </div>
-    );
+        ) : (
+            <Loader/>
+        )
+
+    )
 
 
 }
