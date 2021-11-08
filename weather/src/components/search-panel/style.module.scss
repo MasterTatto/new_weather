@@ -1,0 +1,43 @@
+.wrapper {
+  height: 100vh;
+  width: 100vw;
+  background-color: crimson;
+  background-image: url("https://images.freeimages.com/images/large-previews/70c/misty-weather-1446178.jpg");
+  background-size: cover;
+  background-position: center center;
+  position: absolute;
+}
+
+.searchBox {
+  display: flex;
+  max-width: 500px;
+  width: 100%;
+  align-items: center;
+  margin: 5% auto;
+  flex-direction: column;
+  height: 400px;
+  justify-content: space-between;
+}
+
+.logo {
+  color: whitesmoke;
+  font-size: 85px;
+}
+
+.root {
+  width: 100%;
+  color: #61dafb;
+}
+
+@media only screen and (min-width: 320px) and (max-width: 575px) {
+
+  .searchBox {
+    max-width: 250px;
+    height: 300px;
+  }
+
+  .logo {
+    font-size: 40px;
+    padding-top: 40px;
+  }
+}
